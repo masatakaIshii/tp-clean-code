@@ -7,8 +7,8 @@ import fr.esgi.masa.tpcleancode.core.utils.DefaultFileReader;
 import fr.esgi.masa.tpcleancode.core.utils.DefaultFileWriter;
 import fr.esgi.masa.tpcleancode.core.utils.Logger;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Application {
@@ -19,18 +19,27 @@ public class Application {
             logger.out("Problem missing arguments");
             return;
         }
+
         start(args, logger);
     }
 
-    public static void start(String[] args, Logger logger) {
+    public static void start(String[] arguments, Logger logger) {
         var fileReader = new DefaultFileReader();
         var fileWriter = new DefaultFileWriter();
         var booksStorage = new PersistentBooksStorage(fileReader, fileWriter);
         var library = new Library(booksStorage, logger);
 
+
         // parse user
-        library.start(Arrays.stream(args).collect(Collectors.toList()));
+
+        //fileReader.readTextFile();
+        var listOfArguments = convertArgumentsToList(arguments);
+        library.start(listOfArguments);
 
         // parse book
+    }
+
+    public static List<String> convertArgumentsToList(String[] arguments) {
+        return Arrays.stream(arguments).collect(Collectors.toList());
     }
 }

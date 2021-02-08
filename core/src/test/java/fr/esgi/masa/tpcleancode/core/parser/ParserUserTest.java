@@ -40,7 +40,7 @@ public class ParserUserTest {
 
     @Test
     public void parseList_withFewLinesOfUser_shouldReturnListOfUsers() {
-        var result = sut.parseList("Alice;LIBRARIAN\nJoe;MEMBER");
+        var result = sut.parseList("Alice;LIBRARIAN"+ System.getProperty("line.separator") +"Joe;MEMBER");
 
         Assertions.assertThat(result.size()).isEqualTo(2);
 

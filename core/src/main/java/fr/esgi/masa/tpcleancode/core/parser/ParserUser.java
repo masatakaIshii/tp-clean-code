@@ -25,7 +25,7 @@ public class ParserUser implements Parser<User> {
 
     @Override
     public List<User> parseList(String content) {
-        var listLineUserData = content.split("\n");
+        var listLineUserData = content.split(System.lineSeparator() );
         var listUser = new ArrayList<User>();
 
         Arrays.stream(listLineUserData).forEach(line -> {
