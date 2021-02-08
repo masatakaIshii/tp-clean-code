@@ -1,4 +1,4 @@
-package fr.esgi.masa.tpcleancode.core.entity.userrole;
+package fr.esgi.masa.tpcleancode.core.entity;
 
 public enum UserRole {
     GUEST,

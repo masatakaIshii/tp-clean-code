@@ -1,17 +1,17 @@
 package fr.esgi.masa.tpcleancode.core.storage;
 
 import fr.esgi.masa.tpcleancode.core.entity.Book;
-import fr.esgi.masa.tpcleancode.core.entity.BorrowedBookOfUser;
+import fr.esgi.masa.tpcleancode.core.entity.BorrowedBook;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MemoryBooksStorage implements Storage {
-    private final List<BorrowedBookOfUser> listBorrowedBookOfUser;
+public class MemoryBooksStorage implements BooksStorage {
+    private final List<BorrowedBook> listBorrowedBook;
     private final List<Book> books;
 
     public MemoryBooksStorage() {
-        listBorrowedBookOfUser = new ArrayList<>();
+        listBorrowedBook = new ArrayList<>();
         books = new ArrayList<>();
     }
 
@@ -27,14 +27,14 @@ public class MemoryBooksStorage implements Storage {
     }
 
     @Override
-    public void addBorrowBook(BorrowedBookOfUser borrowedBookOfUser) throws Exception {
-        var book = borrowedBookOfUser.getBook();
+    public void addBorrowBook(BorrowedBook borrowedBook) throws Exception {
+        var book = borrowedBook.getBook();
         if (!book.isValid()) throw new Exception("invalid book can't be add");
-        listBorrowedBookOfUser.add(borrowedBookOfUser);
+        listBorrowedBook.add(borrowedBook);
     }
 
     @Override
-    public List<BorrowedBookOfUser> seeListBorrowedBookOfUser() {
-        return listBorrowedBookOfUser;
+    public List<BorrowedBook> seeListBorrowedBook() {
+        return listBorrowedBook;
     }
 }

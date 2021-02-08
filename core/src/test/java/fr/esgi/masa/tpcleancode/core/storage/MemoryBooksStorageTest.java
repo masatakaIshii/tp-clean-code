@@ -1,9 +1,9 @@
 package fr.esgi.masa.tpcleancode.core.storage;
 
 import fr.esgi.masa.tpcleancode.core.entity.Book;
-import fr.esgi.masa.tpcleancode.core.entity.BorrowedBookOfUser;
+import fr.esgi.masa.tpcleancode.core.entity.BorrowedBook;
 import fr.esgi.masa.tpcleancode.core.entity.User;
-import fr.esgi.masa.tpcleancode.core.entity.userrole.UserRole;
+import fr.esgi.masa.tpcleancode.core.entity.UserRole;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,8 +45,8 @@ public class MemoryBooksStorageTest {
     @Test
     public void addBook_whenABookWithAllDataPresent_nothingHappened() throws Exception {
         var book = new Book("title book", "toto", "999");
-        var member = new User(UserRole.MEMBER, "tata");
-        var borrowedBookOfUser = new BorrowedBookOfUser(book, member, LocalDate.now());
+        var member = new User("tata", UserRole.MEMBER);
+        var borrowedBookOfUser = new BorrowedBook(book, member, LocalDate.now());
 
         Assertions.assertThat(book.isValid()).isTrue();
         sut.addBorrowBook(borrowedBookOfUser);
@@ -55,8 +55,8 @@ public class MemoryBooksStorageTest {
     @Test
     public void addBook_whenBookIsNotValid_shouldThrowException() {
         var book = new Book(null, "toto", "000");
-        var member = new User(UserRole.MEMBER, "guest");
-        var borrowedBookOfUser = new BorrowedBookOfUser(book, member, LocalDate.now());
+        var member = new User("guest", UserRole.MEMBER);
+        var borrowedBookOfUser = new BorrowedBook(book, member, LocalDate.now());
 
         Assertions.assertThat(book.isValid()).isFalse();
         Assertions.assertThatThrownBy(() -> {

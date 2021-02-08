@@ -1,7 +1,6 @@
 package fr.esgi.masa.tpcleancode.core.entity;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
 import org.junit.Test;
 
 public class BookTest {
