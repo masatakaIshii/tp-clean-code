@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface Storage<T> {
 
-    void add(T book) throws Exception;
+    void add(T element) throws Exception;
+
+    void remove(T element) throws IOException, IncorrectContentException;
 
     List<T> getAll() throws IOException, IncorrectContentException;
 }

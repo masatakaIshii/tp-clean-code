@@ -36,7 +36,7 @@ public class PersistentBooksStorageTest {
     }
 
     @Test
-    public void addBook_shouldReadTextFileOfBookFile() throws Exception {
+    public void add_shouldReadTextFileOfBookFile() throws Exception {
         var book = new Book("toto", "toto", "toto");
 
         sut.add(book);
@@ -45,7 +45,7 @@ public class PersistentBooksStorageTest {
     }
 
     @Test
-    public void addBook_shouldAddNewBookLineToCurrentContentFile() throws Exception {
+    public void add_shouldAddNewBookLineToCurrentContentFile() throws Exception {
         var book = new Book("toto", "tata", "titi");
 
         var currentContentOfFile = "Les misérable;Victor Hugo;654f6z5ef"
@@ -65,14 +65,67 @@ public class PersistentBooksStorageTest {
     }
 
     @Test
-    public void setAllBooks_shouldReadTextFileOfBookFile() throws IOException, IncorrectContentException {
+    public void remove_shouldReadTextFileOfBooksStorageFile() throws IOException, IncorrectContentException {
+        var book = new Book("toto", "toto", "toto");
+
+        sut.remove(book);
+
+        Mockito.verify(mockFileReader).readTextFile(PersistentBooksStorage.booksStorageFilePath);
+    }
+
+    @Test
+    public void remove_shouldParseBookList() throws IOException, IncorrectContentException {
+        var book = new Book("toto", "toto", "toto");
+        var contentTextFile = "title1;authorName1;8f4z6fe"
+                + System.lineSeparator()
+                + "toto;tata;titi"
+                + System.lineSeparator()
+                + "lastTitle;last author name;la7fze78"
+                + System.lineSeparator();
+        Mockito.when(mockFileReader.readTextFile(PersistentBooksStorage.booksStorageFilePath))
+                .thenReturn(contentTextFile);
+
+        sut.remove(book);
+
+        Mockito.verify(mockParser).parseList(contentTextFile);
+    }
+
+    @Test
+    public void remove_shouldWriteNewListBookWithoutParamOne() throws IOException, IncorrectContentException {
+        var book = new Book("toto", "tata", "titi");
+        var contentTextFile = "title1;authorName1;8f4z6fe"
+                + System.lineSeparator()
+                + "toto;tata;titi"
+                + System.lineSeparator()
+                + "lastTitle;last author name;la7fze78"
+                + System.lineSeparator();
+        var listBook = new ArrayList<Book>();
+        listBook.add(new Book("title1", "authorName1", "8f4z6fe"));
+        listBook.add(new Book("toto", "tata", "titi"));
+        listBook.add(new Book("lastTitle", "last author name", "la7fze78"));
+        var expectedContent = "title1;authorName1;8f4z6fe"
+                + System.lineSeparator()
+                + "lastTitle;last author name;la7fze78"
+                + System.lineSeparator();
+
+        Mockito.when(mockFileReader.readTextFile(PersistentBooksStorage.booksStorageFilePath))
+                .thenReturn(contentTextFile);
+        Mockito.when(mockParser.parseList(contentTextFile))
+                .thenReturn(listBook);
+        sut.remove(book);
+
+        Mockito.verify(mockFileWriter).writeContentToFile(expectedContent, PersistentBooksStorage.booksStorageFilePath);
+    }
+
+    @Test
+    public void getAll_shouldReadTextFileOfBookFile() throws IOException, IncorrectContentException {
         sut.getAll();
 
         Mockito.verify(mockFileReader).readTextFile(PersistentBooksStorage.booksStorageFilePath);
     }
 
     @Test
-    public void setAllBooks_shouldParseListOfBook() throws IOException, IncorrectContentException {
+    public void getAll_shouldParseListOfBook() throws IOException, IncorrectContentException {
         Mockito.when(mockFileReader.readTextFile(PersistentBooksStorage.booksStorageFilePath))
                 .thenReturn("toto;tata;titi");
         sut.getAll();
@@ -81,7 +134,7 @@ public class PersistentBooksStorageTest {
     }
 
     @Test
-    public void setAllBooks_shouldReturnListOfBook() throws IOException, IncorrectContentException {
+    public void getAll_shouldReturnListOfBook() throws IOException, IncorrectContentException {
         var expectedBookList = new ArrayList<Book>();
         expectedBookList.add(new Book("toto", "tata", "titi"));
         Mockito.when(mockFileReader.readTextFile(PersistentBooksStorage.booksStorageFilePath))

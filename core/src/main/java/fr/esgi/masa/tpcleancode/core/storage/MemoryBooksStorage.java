@@ -13,9 +13,14 @@ public class MemoryBooksStorage implements Storage<Book> {
     }
 
     @Override
-    public void add(Book book) throws Exception {
-        if (!book.isValid()) throw new Exception("invalid book can't be add");
-        books.add(book);
+    public void add(Book element) throws Exception {
+        if (!element.isValid()) throw new Exception("invalid book can't be add");
+        books.add(element);
+    }
+
+    @Override
+    public void remove(Book element) {
+
     }
 
     @Override
