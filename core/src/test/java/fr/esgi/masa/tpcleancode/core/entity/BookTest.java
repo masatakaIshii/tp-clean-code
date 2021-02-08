@@ -32,5 +32,5 @@ public class BookTest {
         Assertions.assertThat(sut.isValid()).isFalse();
     }
 
-    
+
 }
