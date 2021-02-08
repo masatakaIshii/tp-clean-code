@@ -8,6 +8,12 @@ import java.nio.file.Path;
 
 public class DefaultFileReader implements FileReader {
     @Override
+    public Boolean isFileExist(String filePath) {
+        var file = new File(filePath);
+        return file.exists();
+    }
+
+    @Override
     public String readTextFile(String filePath) throws IOException {
         try {
             return Files.readString(Path.of(filePath));

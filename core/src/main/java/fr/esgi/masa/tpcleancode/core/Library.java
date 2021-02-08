@@ -1,15 +1,16 @@
 package fr.esgi.masa.tpcleancode.core;
 
-import fr.esgi.masa.tpcleancode.core.storage.BooksStorage;
+import fr.esgi.masa.tpcleancode.core.entity.Book;
+import fr.esgi.masa.tpcleancode.core.storage.Storage;
 import fr.esgi.masa.tpcleancode.core.utils.Logger;
 
 import java.util.List;
 
 
 public class Library {
-    private final BooksStorage booksStorage;
+    private final Storage<Book> booksStorage;
 
-    public Library(BooksStorage booksStorage, Logger logger) {
+    public Library(Storage<Book> booksStorage, Logger logger) {
         this.booksStorage = booksStorage;
     }
 

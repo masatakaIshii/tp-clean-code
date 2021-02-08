@@ -1,6 +1,7 @@
 package fr.esgi.masa.tpcleancode.cli;
 
 import fr.esgi.masa.tpcleancode.core.Library;
+import fr.esgi.masa.tpcleancode.core.parser.ParserBook;
 import fr.esgi.masa.tpcleancode.core.storage.PersistentBooksStorage;
 import fr.esgi.masa.tpcleancode.core.utils.ConsoleLogger;
 import fr.esgi.masa.tpcleancode.core.utils.DefaultFileReader;
@@ -26,9 +27,9 @@ public class Application {
     public static void start(String[] arguments, Logger logger) {
         var fileReader = new DefaultFileReader();
         var fileWriter = new DefaultFileWriter();
-        var booksStorage = new PersistentBooksStorage(fileReader, fileWriter);
+        var parserBook = new ParserBook();
+        var booksStorage = new PersistentBooksStorage(fileReader, fileWriter, parserBook);
         var library = new Library(booksStorage, logger);
-
 
         // parse user
 

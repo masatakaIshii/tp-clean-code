@@ -33,12 +33,12 @@ public class ParserBookTest {
     public void parse_missSemicolon_shouldThrowException() {
         Assertions.assertThatThrownBy(() -> sut.parse("should;9df"))
                 .isExactlyInstanceOf(IncorrectContentException.class)
-                .hasMessage("Miss data in content");
+                .hasMessage("Incorrect number of separator");
     }
 
     @Test
     public void parseList_oneLineCorrectContent_shouldReturnOneBook() throws IncorrectContentException {
-        var result = sut.parseList("title;authorName;0000");
+        var result = sut.parseList("title;authorName;0000" + System.lineSeparator());
 
         Assertions.assertThat(result.size()).isEqualTo(1);
 
@@ -50,7 +50,8 @@ public class ParserBookTest {
 
     @Test
     public void parseList_fewLinesCorrectContent_shouldReturnOneBook() throws IncorrectContentException {
-        var result = sut.parseList("title;authorName;0000%nshould;work;9df");
+        var result = sut.parseList("title;authorName;0000"+
+                System.lineSeparator() +"should;work;9df" + System.lineSeparator());
 
         Assertions.assertThat(result.size()).isEqualTo(2);
 
