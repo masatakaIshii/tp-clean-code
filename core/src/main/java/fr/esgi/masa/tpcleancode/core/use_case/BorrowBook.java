@@ -38,6 +38,8 @@ public class BorrowBook implements LibraryAction {
         checkIfNumberBorrowedBooksLimitExceed(foundUser, borrowedBookList);
 
         var newBorrowedBook = new BorrowedBook(foundBook, foundUser, LocalDate.now());
+        checkIfUserAlreadyBorrowedBook(borrowedBookList, newBorrowedBook);
+
         borrowedBookStorage.add(newBorrowedBook);
         bookStorage.remove(foundBook);
     }
@@ -50,6 +52,13 @@ public class BorrowBook implements LibraryAction {
         if (checked >= 4) throw new NotAuthorizedException(
                 "The user '" + foundUser.getLogin() + "' can't borrow more than 4 books"
         );
+    }
+
+    private void checkIfUserAlreadyBorrowedBook(List<BorrowedBook> borrowedBookList, BorrowedBook newBorrowedBook) throws NotAuthorizedException {
+        var numberEqualBorrowedBook = borrowedBookList.stream()
+                .filter(borrowedBook -> borrowedBook.equals(newBorrowedBook))
+                .count();
+        if (numberEqualBorrowedBook > 0) throw new NotAuthorizedException("Can't borrow book that you already borrowed");
     }
 
     private Book searchBookByTitle(String bookTitle) throws NotAuthorizedException, IOException, IncorrectContentException {

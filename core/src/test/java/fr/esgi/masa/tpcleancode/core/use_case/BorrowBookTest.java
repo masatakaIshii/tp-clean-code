@@ -110,9 +110,9 @@ public class BorrowBookTest {
 
         var borrowedBookList = new ArrayList<BorrowedBook>();
         borrowedBookList.add(new BorrowedBook(new Book("firstBook", "Michou", "123"), user, LocalDate.now()));
-        borrowedBookList.add(new BorrowedBook(new Book("secondBook", "Michou", "456"), user,  LocalDate.now()));
-        borrowedBookList.add(new BorrowedBook(new Book("thirdBook", "Michou", "789"), user,  LocalDate.now()));
-        borrowedBookList.add(new BorrowedBook(new Book("fourthBook", "Michou", "987"), user,  LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("secondBook", "Michou", "456"), user, LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("thirdBook", "Michou", "789"), user, LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("fourthBook", "Michou", "987"), user, LocalDate.now()));
 
         Mockito.when(userStorage.getAll()).thenReturn(userList);
         Mockito.when(bookStorage.getAll()).thenReturn(bookList);
@@ -139,8 +139,8 @@ public class BorrowBookTest {
 
         var borrowedBookList = new ArrayList<BorrowedBook>();
         borrowedBookList.add(new BorrowedBook(new Book("firstBook", "Michou", "123"), user, LocalDate.now()));
-        borrowedBookList.add(new BorrowedBook(new Book("secondBook", "Michou", "456"), user,  LocalDate.now()));
-        borrowedBookList.add(new BorrowedBook(new Book("thirdBook", "Michou", "789"), user,  LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("secondBook", "Michou", "456"), user, LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("thirdBook", "Michou", "789"), user, LocalDate.now()));
         var newBorrowedBook = new BorrowedBook(book, user, LocalDate.now());
 
         Mockito.when(userStorage.getAll()).thenReturn(userList);
@@ -168,8 +168,8 @@ public class BorrowBookTest {
 
         var borrowedBookList = new ArrayList<BorrowedBook>();
         borrowedBookList.add(new BorrowedBook(new Book("firstBook", "Michou", "123"), user, LocalDate.now()));
-        borrowedBookList.add(new BorrowedBook(new Book("secondBook", "Michou", "456"), user,  LocalDate.now()));
-        borrowedBookList.add(new BorrowedBook(new Book("thirdBook", "Michou", "789"), user,  LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("secondBook", "Michou", "456"), user, LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("thirdBook", "Michou", "789"), user, LocalDate.now()));
         var newBorrowedBook = new BorrowedBook(book, user, LocalDate.now());
 
         Mockito.when(userStorage.getAll()).thenReturn(userList);
@@ -179,5 +179,33 @@ public class BorrowBookTest {
         sut.execute(arguments);
 
         Mockito.verify(bookStorage).remove(newBorrowedBook.getBook());
+    }
+
+    @Test
+    public void whenAlreadyBorrowedBook_shouldThrowException() throws Exception {
+        var arguments = new ArrayList<String>();
+        arguments.add(sut.actionName());
+        arguments.add("Michou");
+        arguments.add("TitleBook");
+        var user = new User("Michou", UserRole.MEMBER);
+        var userList = new ArrayList<User>();
+        userList.add(user);
+
+        var bookList = new ArrayList<Book>();
+        var book = new Book("TitleBook", "author", "987654");
+        bookList.add(book);
+
+        var borrowedBookList = new ArrayList<BorrowedBook>();
+        borrowedBookList.add(new BorrowedBook(new Book("firstBook", "Michou", "123"), user, LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("secondBook", "Michou", "456"), user, LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("TitleBook", "author", "987654"), user, LocalDate.now()));
+
+        Mockito.when(userStorage.getAll()).thenReturn(userList);
+        Mockito.when(bookStorage.getAll()).thenReturn(bookList);
+        Mockito.when(borrowedBookStorage.getAll()).thenReturn(borrowedBookList);
+
+        Assertions.assertThatThrownBy(() -> {sut.execute(arguments);})
+                .isExactlyInstanceOf(NotAuthorizedException.class)
+                .hasMessage("Can't borrow book that you already borrowed");
     }
 }
