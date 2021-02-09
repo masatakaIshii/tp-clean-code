@@ -1,16 +1,22 @@
 package fr.esgi.masa.tpcleancode.core.use_case;
 
-import fr.esgi.masa.tpcleancode.core.entity.Book;
-import fr.esgi.masa.tpcleancode.core.entity.User;
+import fr.esgi.masa.tpcleancode.core.storage.PersistentBooksStorage;
+import fr.esgi.masa.tpcleancode.core.storage.PersistentBorrowedBooksStorage;
+
+import java.util.List;
 
 public class BorrowBook implements LibraryAction{
-    @Override
-    public String actionName() {
-        return null;
+    public BorrowBook(PersistentBooksStorage booksStorage, PersistentBorrowedBooksStorage borrowBooksStorage, AddBook addBook) {
+
     }
 
     @Override
-    public void execute(Book book, User user) {
+    public String actionName() {
+        return "borrowBook";
+    }
+
+    @Override
+    public void execute(List<String> arguments) {
 
     }
 }
