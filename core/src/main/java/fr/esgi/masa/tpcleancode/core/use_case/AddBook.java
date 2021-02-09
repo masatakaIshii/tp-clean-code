@@ -23,8 +23,14 @@ public class AddBook implements LibraryAction {
 
     @Override
     public void execute(List<String> arguments) throws Exception {
+        if (arguments.size() != 4) throw new IllegalArgumentException();
         User userFound = getUserByFirstArgumentLogin(arguments.get(1));
         if (userFound.getRole() != UserRole.LIBRARIAN) throw new NotAuthorizedException("Only librarian can add book");
+
+        addTheBook(arguments);
+    }
+
+    private void addTheBook(List<String> arguments) throws Exception {
         var bookTitle = arguments.get(2);
         var bookAuthor = arguments.get(3);
         var bookReference = arguments.get(4);

@@ -3,7 +3,6 @@ package fr.esgi.masa.tpcleancode.core.use_case;
 import fr.esgi.masa.tpcleancode.core.entity.Book;
 import fr.esgi.masa.tpcleancode.core.entity.User;
 import fr.esgi.masa.tpcleancode.core.entity.UserRole;
-import fr.esgi.masa.tpcleancode.core.parser.IncorrectContentException;
 import fr.esgi.masa.tpcleancode.core.storage.Storage;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -13,10 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AddBookTest {
@@ -36,6 +32,17 @@ public class AddBookTest {
     @Test
     public void actionNameIsAddBook() {
         Assertions.assertThat(sut.actionName()).isEqualTo("addBook");
+    }
+
+    @Test
+    public void whenNumberArgumentsNotCorrespond_shouldThrowException() {
+        var arguments = new ArrayList<String>();
+        arguments.add(sut.actionName());
+        arguments.add("Gertrude");
+
+        Assertions.assertThatThrownBy(()-> {
+            sut.execute(arguments);
+        }).isExactlyInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
