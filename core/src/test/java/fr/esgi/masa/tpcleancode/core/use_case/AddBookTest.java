@@ -87,10 +87,7 @@ public class AddBookTest {
         var usersList = new ArrayList<User>();
         usersList.add(new User("LibrarianLogin", UserRole.LIBRARIAN));
 
-        var booksList = new ArrayList<Book>();
-
         Mockito.when(userStorage.getAll()).thenReturn(usersList);
-        Mockito.when(bookStorage.getAll()).thenReturn(booksList);
 
         sut.execute(arguments);
 

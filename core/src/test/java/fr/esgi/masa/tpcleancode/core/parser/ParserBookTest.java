@@ -49,7 +49,7 @@ public class ParserBookTest {
     }
 
     @Test
-    public void parseList_fewLinesCorrectContent_shouldReturnOneBook() throws IncorrectContentException {
+    public void parseList_fewLinesCorrectContent_shouldReturnListBook() throws IncorrectContentException {
         var result = sut.parseList("title;authorName;0000"+
                 System.lineSeparator() +"should;work;9df" + System.lineSeparator());
 

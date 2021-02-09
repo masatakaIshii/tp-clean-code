@@ -23,7 +23,7 @@ public class AddBook implements LibraryAction {
 
     @Override
     public void execute(List<String> arguments) throws Exception {
-        if (arguments.size() != 4) throw new IllegalArgumentException();
+        if (arguments.size() != 5) throw new IllegalArgumentException();
         User userFound = getUserByLoginArgument(arguments.get(1));
         if (userFound.getRole() != UserRole.LIBRARIAN) throw new NotAuthorizedException("Only librarian can add book");
 

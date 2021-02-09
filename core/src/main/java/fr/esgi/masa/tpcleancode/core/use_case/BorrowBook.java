@@ -46,6 +46,7 @@ public class BorrowBook implements LibraryAction {
         var checked = borrowedBookList.stream()
                 .filter(borrowedBook -> borrowedBook.getUser().equals(foundUser))
                 .count();
+
         if (checked >= 4) throw new NotAuthorizedException(
                 "The user '" + foundUser.getLogin() + "' can't borrow more than 4 books"
         );

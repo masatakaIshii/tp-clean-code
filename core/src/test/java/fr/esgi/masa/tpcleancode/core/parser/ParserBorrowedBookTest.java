@@ -1,6 +1,7 @@
 package fr.esgi.masa.tpcleancode.core.parser;
 
 import fr.esgi.masa.tpcleancode.core.entity.Book;
+import fr.esgi.masa.tpcleancode.core.entity.BorrowedBook;
 import fr.esgi.masa.tpcleancode.core.entity.User;
 import fr.esgi.masa.tpcleancode.core.entity.UserRole;
 import org.assertj.core.api.Assertions;
@@ -8,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class ParserBorrowedBookTest {
     ParserBorrowedBook sut;
@@ -24,7 +26,8 @@ public class ParserBorrowedBookTest {
         var localDate = LocalDate.now();
         var content = book.getTitle() + ";" + book.getAuthorName() + ";" + book.getReference()
                 + "||" + user.getLogin() + ";GUEST"
-                + "||" + localDate.toString();
+                + "||" + localDate.toString()
+                + System.lineSeparator();
         var result = sut.parse(content);
         Assertions.assertThat(result).isNotNull();
         Assertions.assertThat(result.getBook()).isEqualTo(book);
@@ -72,5 +75,30 @@ public class ParserBorrowedBookTest {
         Assertions.assertThatThrownBy(() -> sut.parse(content))
                 .isExactlyInstanceOf(IncorrectContentException.class)
                 .hasMessage("Missing data");
+    }
+
+    @Test
+    public void parsList_fewLinesCorrectContent_shouldReturnListBorrowedBook() throws IncorrectContentException {
+        var book = new Book("titlebook", "authorName", "refeoij25");
+        var user = new User("login", UserRole.GUEST);
+        var localDate = LocalDate.now();
+        var book2 = new Book("titlebook2", "authorName2", "refeoij2q");
+        var user2 = new User("login2", UserRole.GUEST);
+        var localDate2 = LocalDate.now();
+        var content = book.getTitle() + ";" + book.getAuthorName() + ";" + book.getReference()
+                + "||" + user.getLogin() + ";GUEST"
+                + "||" + localDate.toString()
+                + System.lineSeparator()
+                + book2.getTitle() + ";" + book2.getAuthorName() + ";" + book2.getReference()
+                + "||" + user2.getLogin() + ";GUEST"
+                + "||" + localDate2.toString()
+                + System.lineSeparator();
+        var listBorrowedBook = new ArrayList<BorrowedBook>();
+        listBorrowedBook.add(new BorrowedBook(book, user, localDate));
+        listBorrowedBook.add(new BorrowedBook(book2, user2, localDate2));
+
+        var result = sut.parseList(content);
+
+        Assertions.assertThat(result).isEqualTo(listBorrowedBook);
     }
 }

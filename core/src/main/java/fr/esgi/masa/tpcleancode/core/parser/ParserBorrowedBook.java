@@ -6,6 +6,7 @@ import fr.esgi.masa.tpcleancode.core.entity.User;
 import fr.esgi.masa.tpcleancode.core.entity.UserRole;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +28,17 @@ public class ParserBorrowedBook implements Parser<BorrowedBook> {
         if (propertiesContent.length != 3) throw new IncorrectContentException("Missing data");
         var book = getBookByContent(propertiesContent[0]);
         var user = getUserByContent(propertiesContent[1]);
-        var localDate = LocalDate.parse(propertiesContent[2]);
+        var localDateWithoutLineSeparator = removeLineSeparator(propertiesContent[2]);
+        var localDate = LocalDate.parse(localDateWithoutLineSeparator);
 
         return new BorrowedBook(book, user, localDate);
+    }
+
+    private String removeLineSeparator(String propertyContent) {
+        if (propertyContent.contains(System.lineSeparator())) {
+            return propertyContent.replaceFirst(System.lineSeparator(), "");
+        }
+        return propertyContent;
     }
 
     private Book getBookByContent(String bookContent) throws IncorrectContentException {
@@ -51,6 +60,13 @@ public class ParserBorrowedBook implements Parser<BorrowedBook> {
 
     @Override
     public List<BorrowedBook> parseList(String content) throws IncorrectContentException {
-        return null;
+        var result = new ArrayList<BorrowedBook>();
+        var listLineBorrowedBook = content.split(System.lineSeparator());
+
+        for (String line: listLineBorrowedBook) {
+            var borrowedBook = this.parse(line);
+            result.add(borrowedBook);
+        }
+        return result;
     }
 }
