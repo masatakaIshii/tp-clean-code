@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -43,6 +44,7 @@ public class BorrowBookTest {
     @Test
     public void whenUserLoginIsNotInFile_shouldThrowException() throws IOException, IncorrectContentException {
         var arguments = new ArrayList<String>();
+        arguments.add(sut.actionName());
         arguments.add("Michou");
         arguments.add("TitleBook");
 
@@ -54,5 +56,99 @@ public class BorrowBookTest {
         Assertions.assertThatThrownBy(() -> sut.execute(arguments))
                 .isExactlyInstanceOf(NotAuthorizedException.class)
                 .hasMessage("The user is not in user list");
+    }
+
+    @Test
+    public void whenUserIsGuest_shouldThrowException() throws IOException, IncorrectContentException {
+        var arguments = new ArrayList<String>();
+        arguments.add(sut.actionName());
+        arguments.add("Michou");
+        arguments.add("TitleBook");
+
+        var userList = new ArrayList<User>();
+        userList.add(new User("Michou", UserRole.GUEST));
+
+        Mockito.when(userStorage.getAll()).thenReturn(userList);
+
+        Assertions.assertThatThrownBy(() -> sut.execute(arguments))
+                .isExactlyInstanceOf(NotAuthorizedException.class)
+                .hasMessage("The guest can't borrow book");
+    }
+
+    @Test
+    public void whenBookNameIsNotInStorage_shouldThrowException() throws IOException, IncorrectContentException {
+        var arguments = new ArrayList<String>();
+        arguments.add(sut.actionName());
+        arguments.add("Michou");
+        arguments.add("TitleBook");
+
+        var userList = new ArrayList<User>();
+        userList.add(new User("Michou", UserRole.MEMBER));
+        var bookList = new ArrayList<Book>();
+        bookList.add(new Book("bookTitle", "author", "987654"));
+
+        Mockito.when(userStorage.getAll()).thenReturn(userList);
+        Mockito.when(bookStorage.getAll()).thenReturn(bookList);
+
+        Assertions.assertThatThrownBy(() -> sut.execute(arguments))
+                .isExactlyInstanceOf(NotAuthorizedException.class)
+                .hasMessage("The book 'TitleBook' is not available to borrow");
+    }
+
+    @Test
+    public void whenUserBorrowAlready4Books_shouldThrowException() throws IOException, IncorrectContentException {
+        var arguments = new ArrayList<String>();
+        arguments.add(sut.actionName());
+        arguments.add("Michou");
+        arguments.add("TitleBook");
+        var user = new User("Michou", UserRole.MEMBER);
+        var userList = new ArrayList<User>();
+        userList.add(user);
+
+        var bookList = new ArrayList<Book>();
+        bookList.add(new Book("TitleBook", "author", "987654"));
+
+        var borrowedBookList = new ArrayList<BorrowedBook>();
+        borrowedBookList.add(new BorrowedBook(new Book("firstBook", "Michou", "123"), user, LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("secondBook", "Michou", "456"), user,  LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("thirdBook", "Michou", "789"), user,  LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("fourthBook", "Michou", "987"), user,  LocalDate.now()));
+
+        Mockito.when(userStorage.getAll()).thenReturn(userList);
+        Mockito.when(bookStorage.getAll()).thenReturn(bookList);
+        Mockito.when(borrowedBookStorage.getAll()).thenReturn(borrowedBookList);
+
+        Assertions.assertThatThrownBy(() -> sut.execute(arguments))
+                .isExactlyInstanceOf(NotAuthorizedException.class)
+                .hasMessage("The user 'Michou' can't borrow more than 4 books");
+    }
+
+    @Test
+    public void whenAllDataComplete_shouldBorrowedBook() throws Exception {
+        var arguments = new ArrayList<String>();
+        arguments.add(sut.actionName());
+        arguments.add("Michou");
+        arguments.add("TitleBook");
+        var user = new User("Michou", UserRole.MEMBER);
+        var userList = new ArrayList<User>();
+        userList.add(user);
+
+        var bookList = new ArrayList<Book>();
+        var book = new Book("TitleBook", "author", "987654");
+        bookList.add(book);
+
+        var borrowedBookList = new ArrayList<BorrowedBook>();
+        borrowedBookList.add(new BorrowedBook(new Book("firstBook", "Michou", "123"), user, LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("secondBook", "Michou", "456"), user,  LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("thirdBook", "Michou", "789"), user,  LocalDate.now()));
+        var newBorrowedBook = new BorrowedBook(book, user, LocalDate.now());
+
+        Mockito.when(userStorage.getAll()).thenReturn(userList);
+        Mockito.when(bookStorage.getAll()).thenReturn(bookList);
+        Mockito.when(borrowedBookStorage.getAll()).thenReturn(borrowedBookList);
+
+        sut.execute(arguments);
+
+        Mockito.verify(borrowedBookStorage).add(newBorrowedBook);
     }
 }

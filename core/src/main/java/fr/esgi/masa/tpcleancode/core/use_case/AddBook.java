@@ -24,7 +24,7 @@ public class AddBook implements LibraryAction {
     @Override
     public void execute(List<String> arguments) throws Exception {
         if (arguments.size() != 4) throw new IllegalArgumentException();
-        User userFound = getUserByFirstArgumentLogin(arguments.get(1));
+        User userFound = getUserByLoginArgument(arguments.get(1));
         if (userFound.getRole() != UserRole.LIBRARIAN) throw new NotAuthorizedException("Only librarian can add book");
 
         addTheBook(arguments);
@@ -38,7 +38,7 @@ public class AddBook implements LibraryAction {
         booksStorage.add(new Book(bookTitle, bookAuthor, bookReference));
     }
 
-    private User getUserByFirstArgumentLogin(String userLogin) throws java.io.IOException, fr.esgi.masa.tpcleancode.core.parser.IncorrectContentException {
+    private User getUserByLoginArgument(String userLogin) throws java.io.IOException, fr.esgi.masa.tpcleancode.core.parser.IncorrectContentException {
         var users = usersStorage.getAll();
         return findUserByLogin(userLogin, users);
     }
