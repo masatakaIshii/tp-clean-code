@@ -48,8 +48,8 @@ public class Application {
         prepareData(booksStorage, borrowBooksStorage, usersStorage, fileReader);
 
         var addBook = new AddBook(booksStorage, usersStorage);
-        var borrowBook = new BorrowBook(booksStorage, borrowBooksStorage, addBook);
-        var returnBorrowedBook = new ReturnBorrowedBook(booksStorage, borrowBooksStorage, addBook);
+        var borrowBook = new BorrowBook(booksStorage, borrowBooksStorage, usersStorage);
+        var returnBorrowedBook = new ReturnBorrowedBook(booksStorage, borrowBooksStorage, usersStorage);
 
         var seeContent = new SeeContentEveryUser(booksStorage, logger);
 

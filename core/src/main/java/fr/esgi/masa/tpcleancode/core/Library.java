@@ -30,7 +30,11 @@ public class Library {
         if (actionIsUndefinedOrArgumentsAreLessThan3(arguments, action)) {
             throw new IllegalArgumentException();
         }
-        action.execute(arguments);
+        try {
+            action.execute(arguments);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean actionIsUndefinedOrArgumentsAreLessThan3(List<String> arguments, LibraryAction action) {
