@@ -42,20 +42,20 @@ public class PersistentUsersStorageTest {
 
         sut.add(user);
 
-        Mockito.verify(mockFileReader).readTextFile(PersistentUsersStorage.usersStorageFilePath);
+        Mockito.verify(mockFileReader).readTextFile(PersistentUsersStorage.USERS_STORAGE_FILE_PATH);
     }
 
     @Test
     public void add_shouldAddNewUserLineToCurrentContentFile() throws Exception {
         var user = new User("toto", UserRole.MEMBER);
-        Mockito.when(mockFileReader.readTextFile(PersistentUsersStorage.usersStorageFilePath))
+        Mockito.when(mockFileReader.readTextFile(PersistentUsersStorage.USERS_STORAGE_FILE_PATH))
                 .thenReturn("title;LIBRARIAN" + System.lineSeparator());
         var expected = "title;LIBRARIAN" + System.lineSeparator()
                 + "toto;MEMBER" + System.lineSeparator();
 
         sut.add(user);
 
-        Mockito.verify(mockFileWriter).writeContentToFile(expected, PersistentUsersStorage.usersStorageFilePath);
+        Mockito.verify(mockFileWriter).writeContentToFile(expected, PersistentUsersStorage.USERS_STORAGE_FILE_PATH);
     }
 
 
@@ -65,7 +65,7 @@ public class PersistentUsersStorageTest {
 
         sut.remove(user);
 
-        Mockito.verify(mockFileReader).readTextFile(PersistentUsersStorage.usersStorageFilePath);
+        Mockito.verify(mockFileReader).readTextFile(PersistentUsersStorage.USERS_STORAGE_FILE_PATH);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class PersistentUsersStorageTest {
         var content = "tata;LIBRARIAN" + System.lineSeparator()
                 + "tonton;GUEST" + System.lineSeparator();
 
-        Mockito.when(mockFileReader.readTextFile(PersistentUsersStorage.usersStorageFilePath))
+        Mockito.when(mockFileReader.readTextFile(PersistentUsersStorage.USERS_STORAGE_FILE_PATH))
                 .thenReturn(content);
 
         sut.remove(user);
@@ -89,26 +89,26 @@ public class PersistentUsersStorageTest {
         var listUser = new ArrayList<User>();
         listUser.add(new User("tata", UserRole.LIBRARIAN));
 
-        Mockito.when(mockFileReader.readTextFile(PersistentUsersStorage.usersStorageFilePath))
+        Mockito.when(mockFileReader.readTextFile(PersistentUsersStorage.USERS_STORAGE_FILE_PATH))
                 .thenReturn(content);
         Mockito.when(mockParser.parseList(content))
                 .thenReturn(listUser);
         sut.remove(user);
-        Mockito.verify(mockFileWriter).writeContentToFile("", PersistentUsersStorage.usersStorageFilePath);
+        Mockito.verify(mockFileWriter).writeContentToFile("", PersistentUsersStorage.USERS_STORAGE_FILE_PATH);
     }
 
     @Test
     public void getAll_shouldReadTextFileOfUserStorageFile() throws IOException, IncorrectContentException {
         sut.getAll();
 
-        Mockito.verify(mockFileReader).readTextFile(PersistentUsersStorage.usersStorageFilePath);
+        Mockito.verify(mockFileReader).readTextFile(PersistentUsersStorage.USERS_STORAGE_FILE_PATH);
     }
 
     @Test
     public void getAll_shouldParseListOfUser() throws IOException, IncorrectContentException {
         var content = "login1;GUEST" + System.lineSeparator()
                 + "login2;LIBRARIAN" + System.lineSeparator();
-        Mockito.when(mockFileReader.readTextFile(PersistentUsersStorage.usersStorageFilePath))
+        Mockito.when(mockFileReader.readTextFile(PersistentUsersStorage.USERS_STORAGE_FILE_PATH))
                 .thenReturn(content);
         sut.getAll();
 
@@ -122,7 +122,7 @@ public class PersistentUsersStorageTest {
         listUser.add(new User("login2", UserRole.LIBRARIAN));
         var content = "login1;GUEST" + System.lineSeparator()
                 + "login2;LIBRARIAN" + System.lineSeparator();
-        Mockito.when(mockFileReader.readTextFile(PersistentUsersStorage.usersStorageFilePath))
+        Mockito.when(mockFileReader.readTextFile(PersistentUsersStorage.USERS_STORAGE_FILE_PATH))
                 .thenReturn(content);
         Mockito.when(mockParser.parseList(content))
                 .thenReturn(listUser);

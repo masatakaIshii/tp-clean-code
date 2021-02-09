@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class PersistentBooksStorage implements Storage<Book> {
-    public final static String booksStorageFilePath = "booksStorageFile.txt";
+    public final static String BOOKS_STORAGE_FILE_PATH = "booksStorageFile.txt";
     private final FileReader fileReader;
     private final FileWriter fileWriter;
     private final Parser<Book> parserBook;
@@ -23,18 +23,18 @@ public class PersistentBooksStorage implements Storage<Book> {
 
     @Override
     public void add(Book element) throws Exception {
-        var content = this.fileReader.readTextFile(booksStorageFilePath);
+        var content = this.fileReader.readTextFile(BOOKS_STORAGE_FILE_PATH);
         var newContent = content + getContentFormatOfOneBook(element);
-        this.fileWriter.writeContentToFile(newContent, booksStorageFilePath);
+        this.fileWriter.writeContentToFile(newContent, BOOKS_STORAGE_FILE_PATH);
     }
 
     @Override
     public void remove(Book element) throws IOException, IncorrectContentException {
-        var content = this.fileReader.readTextFile(booksStorageFilePath);
+        var content = this.fileReader.readTextFile(BOOKS_STORAGE_FILE_PATH);
         var listBook = this.parserBook.parseList(content);
         listBook.remove(element);
         var newContent = getContentFormatOfListBook(listBook);
-        this.fileWriter.writeContentToFile(newContent, booksStorageFilePath);
+        this.fileWriter.writeContentToFile(newContent, BOOKS_STORAGE_FILE_PATH);
     }
 
     private String getContentFormatOfListBook(List<Book> listBook) {
@@ -53,7 +53,7 @@ public class PersistentBooksStorage implements Storage<Book> {
 
     @Override
     public List<Book> getAll() throws IOException, IncorrectContentException {
-        var content = fileReader.readTextFile(booksStorageFilePath);
+        var content = fileReader.readTextFile(BOOKS_STORAGE_FILE_PATH);
 
         return parserBook.parseList(content);
     }

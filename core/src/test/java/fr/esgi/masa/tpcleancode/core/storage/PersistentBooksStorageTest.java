@@ -41,7 +41,7 @@ public class PersistentBooksStorageTest {
 
         sut.add(book);
 
-        Mockito.verify(mockFileReader).readTextFile(PersistentBooksStorage.booksStorageFilePath);
+        Mockito.verify(mockFileReader).readTextFile(PersistentBooksStorage.BOOKS_STORAGE_FILE_PATH);
     }
 
     @Test
@@ -56,12 +56,12 @@ public class PersistentBooksStorageTest {
         var expectedContentOfFile = currentContentOfFile
                 + "toto;tata;titi"
                 + System.lineSeparator();
-        Mockito.when(mockFileReader.readTextFile(PersistentBooksStorage.booksStorageFilePath))
+        Mockito.when(mockFileReader.readTextFile(PersistentBooksStorage.BOOKS_STORAGE_FILE_PATH))
                 .thenReturn(currentContentOfFile);
 
         sut.add(book);
 
-        Mockito.verify(mockFileWriter).writeContentToFile(expectedContentOfFile, PersistentBooksStorage.booksStorageFilePath);
+        Mockito.verify(mockFileWriter).writeContentToFile(expectedContentOfFile, PersistentBooksStorage.BOOKS_STORAGE_FILE_PATH);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class PersistentBooksStorageTest {
 
         sut.remove(book);
 
-        Mockito.verify(mockFileReader).readTextFile(PersistentBooksStorage.booksStorageFilePath);
+        Mockito.verify(mockFileReader).readTextFile(PersistentBooksStorage.BOOKS_STORAGE_FILE_PATH);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class PersistentBooksStorageTest {
                 + System.lineSeparator()
                 + "lastTitle;last author name;la7fze78"
                 + System.lineSeparator();
-        Mockito.when(mockFileReader.readTextFile(PersistentBooksStorage.booksStorageFilePath))
+        Mockito.when(mockFileReader.readTextFile(PersistentBooksStorage.BOOKS_STORAGE_FILE_PATH))
                 .thenReturn(contentTextFile);
 
         sut.remove(book);
@@ -108,25 +108,25 @@ public class PersistentBooksStorageTest {
                 + "lastTitle;last author name;la7fze78"
                 + System.lineSeparator();
 
-        Mockito.when(mockFileReader.readTextFile(PersistentBooksStorage.booksStorageFilePath))
+        Mockito.when(mockFileReader.readTextFile(PersistentBooksStorage.BOOKS_STORAGE_FILE_PATH))
                 .thenReturn(contentTextFile);
         Mockito.when(mockParser.parseList(contentTextFile))
                 .thenReturn(listBook);
         sut.remove(book);
 
-        Mockito.verify(mockFileWriter).writeContentToFile(expectedContent, PersistentBooksStorage.booksStorageFilePath);
+        Mockito.verify(mockFileWriter).writeContentToFile(expectedContent, PersistentBooksStorage.BOOKS_STORAGE_FILE_PATH);
     }
 
     @Test
     public void getAll_shouldReadTextFileOfBookFile() throws IOException, IncorrectContentException {
         sut.getAll();
 
-        Mockito.verify(mockFileReader).readTextFile(PersistentBooksStorage.booksStorageFilePath);
+        Mockito.verify(mockFileReader).readTextFile(PersistentBooksStorage.BOOKS_STORAGE_FILE_PATH);
     }
 
     @Test
     public void getAll_shouldParseListOfBook() throws IOException, IncorrectContentException {
-        Mockito.when(mockFileReader.readTextFile(PersistentBooksStorage.booksStorageFilePath))
+        Mockito.when(mockFileReader.readTextFile(PersistentBooksStorage.BOOKS_STORAGE_FILE_PATH))
                 .thenReturn("toto;tata;titi");
         sut.getAll();
 
@@ -137,7 +137,7 @@ public class PersistentBooksStorageTest {
     public void getAll_shouldReturnListOfBook() throws IOException, IncorrectContentException {
         var expectedBookList = new ArrayList<Book>();
         expectedBookList.add(new Book("toto", "tata", "titi"));
-        Mockito.when(mockFileReader.readTextFile(PersistentBooksStorage.booksStorageFilePath))
+        Mockito.when(mockFileReader.readTextFile(PersistentBooksStorage.BOOKS_STORAGE_FILE_PATH))
                 .thenReturn("toto;tata;titi");
         Mockito.when(mockParser.parseList("toto;tata;titi"))
                 .thenReturn(expectedBookList);

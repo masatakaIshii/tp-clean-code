@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class PersistentUsersStorage implements Storage<User> {
-    public final static String usersStorageFilePath = "userStorageFile.txt";
+    public final static String USERS_STORAGE_FILE_PATH = "userStorageFile.txt";
     private final FileReader fileReader;
     private final FileWriter fileWriter;
     private final Parser<User> parserUser;
@@ -23,10 +23,10 @@ public class PersistentUsersStorage implements Storage<User> {
 
     @Override
     public void add(User element) throws Exception {
-        var content = fileReader.readTextFile(usersStorageFilePath);
+        var content = fileReader.readTextFile(USERS_STORAGE_FILE_PATH);
         var newContent = content + getContentOfNewUser(element);
 
-        fileWriter.writeContentToFile(newContent, usersStorageFilePath);
+        fileWriter.writeContentToFile(newContent, USERS_STORAGE_FILE_PATH);
     }
 
     private String getContentOfNewUser(User user) {
@@ -35,13 +35,13 @@ public class PersistentUsersStorage implements Storage<User> {
 
     @Override
     public void remove(User element) throws IOException, IncorrectContentException {
-        var content = fileReader.readTextFile(usersStorageFilePath);
+        var content = fileReader.readTextFile(USERS_STORAGE_FILE_PATH);
         var listUser = parserUser.parseList(content);
 
         listUser.remove(element);
 
         var newContent = getContentListUser(listUser);
-        fileWriter.writeContentToFile(newContent, usersStorageFilePath);
+        fileWriter.writeContentToFile(newContent, USERS_STORAGE_FILE_PATH);
     }
 
     private String getContentListUser(List<User> listUser) {
@@ -55,7 +55,7 @@ public class PersistentUsersStorage implements Storage<User> {
 
     @Override
     public List<User> getAll() throws IOException, IncorrectContentException {
-        var content = fileReader.readTextFile(usersStorageFilePath);
+        var content = fileReader.readTextFile(USERS_STORAGE_FILE_PATH);
 
         return parserUser.parseList(content);
     }
