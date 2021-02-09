@@ -151,4 +151,33 @@ public class BorrowBookTest {
 
         Mockito.verify(borrowedBookStorage).add(newBorrowedBook);
     }
+
+    @Test
+    public void whenAllDataComplete_shouldRemoveBookToBookStorage() throws Exception {
+        var arguments = new ArrayList<String>();
+        arguments.add(sut.actionName());
+        arguments.add("Michou");
+        arguments.add("TitleBook");
+        var user = new User("Michou", UserRole.MEMBER);
+        var userList = new ArrayList<User>();
+        userList.add(user);
+
+        var bookList = new ArrayList<Book>();
+        var book = new Book("TitleBook", "author", "987654");
+        bookList.add(book);
+
+        var borrowedBookList = new ArrayList<BorrowedBook>();
+        borrowedBookList.add(new BorrowedBook(new Book("firstBook", "Michou", "123"), user, LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("secondBook", "Michou", "456"), user,  LocalDate.now()));
+        borrowedBookList.add(new BorrowedBook(new Book("thirdBook", "Michou", "789"), user,  LocalDate.now()));
+        var newBorrowedBook = new BorrowedBook(book, user, LocalDate.now());
+
+        Mockito.when(userStorage.getAll()).thenReturn(userList);
+        Mockito.when(bookStorage.getAll()).thenReturn(bookList);
+        Mockito.when(borrowedBookStorage.getAll()).thenReturn(borrowedBookList);
+
+        sut.execute(arguments);
+
+        Mockito.verify(bookStorage).remove(newBorrowedBook.getBook());
+    }
 }

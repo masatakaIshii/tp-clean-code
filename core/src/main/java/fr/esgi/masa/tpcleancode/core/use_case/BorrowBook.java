@@ -31,18 +31,24 @@ public class BorrowBook implements LibraryAction {
     public void execute(List<String> arguments) throws Exception {
         var userLogin = arguments.get(1);
         var bookTitle = arguments.get(2);
-
         var foundUser = searchUserByLoginName(userLogin);
         var foundBook = searchBookByTitle(bookTitle);
         var borrowedBookList = borrowedBookStorage.getAll();
+
+        checkIfNumberBorrowedBooksLimitExceed(foundUser, borrowedBookList);
+
+        var newBorrowedBook = new BorrowedBook(foundBook, foundUser, LocalDate.now());
+        borrowedBookStorage.add(newBorrowedBook);
+        bookStorage.remove(foundBook);
+    }
+
+    private void checkIfNumberBorrowedBooksLimitExceed(User foundUser, List<BorrowedBook> borrowedBookList) throws NotAuthorizedException {
         var checked = borrowedBookList.stream()
                 .filter(borrowedBook -> borrowedBook.getUser().equals(foundUser))
                 .count();
         if (checked >= 4) throw new NotAuthorizedException(
                 "The user '" + foundUser.getLogin() + "' can't borrow more than 4 books"
         );
-        var newBorrowedBook = new BorrowedBook(foundBook, foundUser, LocalDate.now());
-        borrowedBookStorage.add(newBorrowedBook);
     }
 
     private Book searchBookByTitle(String bookTitle) throws NotAuthorizedException, IOException, IncorrectContentException {
